@@ -1,6 +1,8 @@
 import { assetUrl } from './asset';
 
-const BASE = '/templates/jogja-1/v1.0.0/fonts';
+const BASE = import.meta.env.NODE_ENV === 'production'
+  ? '/templates/jogja-1/v1.0.0/fonts'
+  : '/fonts';
 
 function load(
   family: string,

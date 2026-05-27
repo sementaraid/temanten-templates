@@ -2,6 +2,9 @@
 @import 'tw-animate-css';
 @import './font.css';
 
+@source "../";
+@source "../../dev";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

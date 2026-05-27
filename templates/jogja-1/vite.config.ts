@@ -9,6 +9,7 @@ const UMD_NAME = `TemantanTemplate_${SLUG.replace(/-/g, '')}`;
 export default defineConfig(({ command }) => ({
   plugins: [react(), tailwindcss()],
   resolve: {
+    dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
       '~': path.resolve(__dirname, 'src'),
@@ -16,6 +17,7 @@ export default defineConfig(({ command }) => ({
   },
   // Dev mode: renders the template inside a real TemantenProvider from the SDK
   root: command === 'serve' ? 'dev' : undefined,
+  publicDir: path.resolve(__dirname, 'public'),
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.tsx'),
