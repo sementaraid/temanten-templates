@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from '../components/ui/button';
 import { useTemantenSetter, useTemantenState } from '@temanten/sdk';
+import { assetUrl } from '../lib/asset';
 
 export const SplashScreen = () => {
   const { screenState, invitationData } = useTemantenState();
@@ -19,7 +20,7 @@ export const SplashScreen = () => {
         >
           <div className="relative w-full h-full overflow-hidden px-6">
             <img
-              src="/images/gunungan.png"
+              src={assetUrl('/images/gunungan.png')}
               className="pointer-events-none w-full h-auto absolute -left-5 bottom-20 scale-300 opacity-[30%] invert-[0.5] blur-[4px]"
             />
             <motion.div
@@ -29,7 +30,7 @@ export const SplashScreen = () => {
               exit={{ y: -24, opacity: 0, scale: 0.96, transition: { duration: 0.45 } }}
               className="flex justify-center items-center min-h-screen flex-col space-y-4"
             >
-              <img src="/images/gunungan.png" className="w-48 h-auto" />
+              <img src={assetUrl('/images/gunungan.png')} className="w-48 h-auto" />
               <div className="space-y-4">
                 <h2 className="font-arashveti text-4xl font-bold text-[#a85200] dark:text-[#e8a060] text-center">
                   {bride.nickname}

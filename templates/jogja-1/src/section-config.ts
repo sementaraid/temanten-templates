@@ -1,5 +1,7 @@
 import type { ComponentType } from 'react';
+import { createElement } from 'react';
 import { Audio, SnowfallEffect } from '@temanten/sdk';
+import { assetUrl } from './lib/asset';
 import { Brides } from './containers/brides';
 import { Ceremony } from './containers/ceremony';
 import { CeremonyAfter } from './containers/ceremony-after';
@@ -18,9 +20,12 @@ export type TemplateSectionEntry = {
   Component: ComponentType;
 };
 
+const TemplateAudio: ComponentType = () =>
+  createElement(Audio, { src: assetUrl('/music/pawestri_cut.mp3') });
+
 export const TEMPLATE_SECTIONS: TemplateSectionEntry[] = [
   { id: 'splash', Component: SplashScreen },
-  { id: 'audio', Component: Audio },
+  { id: 'audio', Component: TemplateAudio },
   { id: 'snowfall', Component: SnowfallEffect },
   { id: 'navigation', Component: Navigation },
   { id: 'floating-controls', Component: FloatingControls },

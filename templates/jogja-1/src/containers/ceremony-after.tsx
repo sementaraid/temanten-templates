@@ -3,6 +3,7 @@ import { buttonVariants } from '../components/ui/button';
 import { motion, useInView } from 'motion/react';
 import { useTemantenState } from '@temanten/sdk';
 import { useRef } from 'react';
+import { assetUrl } from '../lib/asset';
 
 export const CeremonyAfter = () => {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -47,7 +48,7 @@ export const CeremonyAfter = () => {
       >
         <div className="space-y-8 text-center">
           <motion.img
-            src="/images/gunungan.png"
+            src={assetUrl('/images/gunungan.png')}
             className="w-20 h-auto m-auto"
             alt=""
             variants={itemVariants}
@@ -102,22 +103,22 @@ export const CeremonyAfter = () => {
       </motion.div>
 
       <img
-        src="/images/gunungan.png"
+        src={assetUrl('/images/gunungan.png')}
         className="pointer-events-none w-full h-auto absolute -left-58 bottom-20 scale-300 opacity-[15%] invert-[0.5] blur-[3px]"
       />
       <img
-        src="/images/rama.png"
+        src={assetUrl('/images/rama.png')}
         alt="Rama"
         className="pointer-events-none h-auto w-full absolute -bottom-2 -right-40 select-none opacity-10 transform scale-x-120 scale-y-120"
         aria-hidden="true"
       />
       <img
-        src="/images/awan.png"
+        src={assetUrl('/images/awan.png')}
         alt="Awan Decoration"
         className="pointer-events-none w-full h-auto absolute -top-24 transform -scale-y-100"
       />
       <img
-        src="/images/awan.png"
+        src={assetUrl('/images/awan.png')}
         alt="Awan Decoration"
         className="pointer-events-none w-full h-auto absolute -bottom-24"
       />

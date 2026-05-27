@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { useTemantenState } from '@temanten/sdk';
 import { Button } from '../components/ui/button';
 import { Countdown } from '../components/invitation/countdown';
+import { assetUrl } from '../lib/asset';
 
 export const Invitation = () => {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -162,7 +163,7 @@ export const Invitation = () => {
       </motion.div>
 
       <motion.img
-        src="/images/sinta.png"
+        src={assetUrl('/images/sinta.png')}
         alt="Sinta"
         className="pointer-events-none w-2/4 h-auto filter absolute bottom-10 left-4"
         variants={sintaVariants}
@@ -170,7 +171,7 @@ export const Invitation = () => {
         animate={isActive ? 'enter' : 'hidden'}
       />
       <motion.img
-        src="/images/rama.png"
+        src={assetUrl('/images/rama.png')}
         alt="Rama"
         className="pointer-events-none w-2/4 h-auto absolute bottom-10 right-8"
         variants={ramaVariants}
@@ -178,12 +179,12 @@ export const Invitation = () => {
         animate={isActive ? 'enter' : 'hidden'}
       />
       <img
-        src="/images/awan.png"
+        src={assetUrl('/images/awan.png')}
         alt="Awan Decoration"
         className="pointer-events-none w-full h-auto absolute -top-12 transform -scale-y-100"
       />
       <img
-        src="/images/awan.png"
+        src={assetUrl('/images/awan.png')}
         alt="Awan Decoration"
         className="pointer-events-none w-full h-auto absolute bottom-0"
       />

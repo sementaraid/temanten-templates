@@ -1,6 +1,7 @@
 import { motion, useInView } from 'motion/react';
 import { useTemantenState } from '@temanten/sdk';
 import { useRef } from 'react';
+import { assetUrl } from '../lib/asset';
 
 export const Brides = () => {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -113,24 +114,24 @@ export const Brides = () => {
       </motion.div>
 
       <img
-        src="/images/sinta.png"
+        src={assetUrl('/images/sinta.png')}
         alt="Sinta"
         className="pointer-events-none w-full h-auto absolute -bottom-4 -left-50 select-none opacity-20 blur transform -rotate-[20deg] -scale-x-100"
         aria-hidden="true"
       />
       <img
-        src="/images/rama.png"
+        src={assetUrl('/images/rama.png')}
         alt="Rama"
         className="pointer-events-none w-full h-auto absolute -bottom-4 -right-30 select-none opacity-20 blur"
         aria-hidden="true"
       />
       <img
-        src="/images/awan.png"
+        src={assetUrl('/images/awan.png')}
         alt="Awan Decoration"
         className="pointer-events-none w-full h-auto absolute -top-2 transform -scale-y-100"
       />
       <img
-        src="/images/awan.png"
+        src={assetUrl('/images/awan.png')}
         alt="Awan Decoration"
         className="pointer-events-none w-full h-auto absolute -bottom-24"
       />

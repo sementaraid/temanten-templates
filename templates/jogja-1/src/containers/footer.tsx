@@ -2,6 +2,7 @@ import { motion, useInView } from 'motion/react';
 import { useTemantenState } from '@temanten/sdk';
 import { useRef } from 'react';
 import { GithubIcon } from 'lucide-react';
+import { assetUrl } from '../lib/asset';
 
 export const Footer = () => {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -43,7 +44,7 @@ export const Footer = () => {
         animate={isActive ? 'enter' : 'hidden'}
         className="flex flex-col justify-center items-center text-center gap-2"
       >
-        <img src="/images/gunungan.png" className="h-16 w-16" />
+        <img src={assetUrl('/images/gunungan.png')} className="h-16 w-16" />
         <p className="flex gap-1 items-center text-sm font-open-sans text-gray-700 dark:text-gray-300">
           Special moments created with<strong>love</strong>
         </p>
@@ -57,7 +58,7 @@ export const Footer = () => {
         </span>
       </motion.div>
       <motion.img
-        src="/images/sinta.png"
+        src={assetUrl('/images/sinta.png')}
         alt="Sinta"
         className="pointer-events-none w-2/4 h-auto filter absolute bottom-10 left-4"
         variants={sintaVariants}
@@ -67,7 +68,7 @@ export const Footer = () => {
 
       {/* Rama: slide in from right and rotate into place */}
       <motion.img
-        src="/images/rama.png"
+        src={assetUrl('/images/rama.png')}
         alt="Rama"
         className="pointer-events-none w-2/4 h-auto absolute bottom-10 right-8"
         variants={ramaVariants}
@@ -76,7 +77,7 @@ export const Footer = () => {
       />
 
       <img
-        src="/images/awan.png"
+        src={assetUrl('/images/awan.png')}
         alt="Awan Decoration"
         className="pointer-events-none w-full h-auto absolute bottom-0 left-0"
       />

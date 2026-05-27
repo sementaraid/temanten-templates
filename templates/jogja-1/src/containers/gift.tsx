@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { useUIStore, useInvitationStore } from '@temanten/sdk';
 import { DebitCard } from './debit-card';
 import { CopyableText } from '../components/invitation/copyable-text';
+import { assetUrl } from '../lib/asset';
 
 export const Gift = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -38,7 +39,7 @@ export const Gift = () => {
       >
         <div className="text-center space-y-3">
           <motion.img
-            src="/images/gunungan.png"
+            src={assetUrl('/images/gunungan.png')}
             className="w-16 h-auto m-auto"
             alt=""
             variants={itemVariants}
@@ -99,13 +100,13 @@ export const Gift = () => {
       </motion.div>
 
       <img
-        src="/images/awan.png"
+        src={assetUrl('/images/awan.png')}
         alt=""
         className="pointer-events-none w-full h-auto absolute -top-24 transform -scale-y-100"
         aria-hidden="true"
       />
       <img
-        src="/images/awan.png"
+        src={assetUrl('/images/awan.png')}
         alt=""
         className="pointer-events-none w-full h-auto absolute -bottom-24"
         aria-hidden="true"

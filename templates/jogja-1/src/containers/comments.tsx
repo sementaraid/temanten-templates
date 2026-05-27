@@ -7,6 +7,7 @@ import { motion, useInView } from 'motion/react';
 import { useRef, useState } from 'react';
 import { useTemantenState, useTemantenStore } from '@temanten/sdk';
 import type { Attendance } from '@temanten/sdk';
+import { assetUrl } from '../lib/asset';
 
 export function Comments() {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -245,7 +246,7 @@ export function Comments() {
         </motion.div>
       </motion.div>
       <img
-        src="/images/awan.png"
+        src={assetUrl('/images/awan.png')}
         alt=""
         className="pointer-events-none w-full h-auto absolute -top-24 -scale-y-100"
         aria-hidden="true"

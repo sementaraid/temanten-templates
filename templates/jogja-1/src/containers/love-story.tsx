@@ -2,6 +2,7 @@ import { motion, useInView } from 'motion/react';
 import { Carousel, CarouselContent, CarouselItem } from '../components/ui/carousel';
 import { useRef, useState } from 'react';
 import { useTemantenState } from '@temanten/sdk';
+import { assetUrl } from '../lib/asset';
 
 const LoveStory = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -94,12 +95,12 @@ const LoveStory = () => {
 
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <img
-            src="/images/awan.png"
+            src={assetUrl('/images/awan.png')}
             alt="Awan Decoration"
             className="w-full h-auto absolute -top-24 transform -scale-y-100"
           />
           <img
-            src="/images/awan.png"
+            src={assetUrl('/images/awan.png')}
             alt="Awan Decoration"
             className="w-full h-auto absolute -bottom-24"
           />

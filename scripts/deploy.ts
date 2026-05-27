@@ -13,7 +13,7 @@ import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3
 import { execSync } from 'node:child_process';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { join, dirname, resolve } from 'node:path';
+import { join, dirname, resolve, extname, relative } from 'node:path';
 import { parseArgs } from 'node:util';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -90,6 +90,38 @@ async function fetchRegistry(client: S3Client, bucket: string): Promise<Manifest
   }
 }
 
+function walkDir(dir: string): string[] {
+  const results: string[] = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = join(dir, entry.name);
+    if (entry.isDirectory()) results.push(...walkDir(fullPath));
+    else results.push(fullPath);
+  }
+  return results;
+}
+
+function getContentType(filePath: string): string {
+  const types: Record<string, string> = {
+    '.js': 'application/javascript',
+    '.css': 'text/css',
+    '.html': 'text/html',
+    '.json': 'application/json',
+    '.webmanifest': 'application/manifest+json',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.ico': 'image/x-icon',
+    '.svg': 'image/svg+xml',
+    '.ttf': 'font/ttf',
+    '.woff': 'font/woff',
+    '.woff2': 'font/woff2',
+    '.mp3': 'audio/mpeg',
+    '.csv': 'text/csv',
+    '.txt': 'text/plain',
+  };
+  return types[extname(filePath).toLowerCase()] ?? 'application/octet-stream';
+}
+
 async function main() {
   const { values: args } = parseArgs({
     args: process.argv.slice(2),
@@ -157,6 +189,8 @@ async function main() {
 
   // ── Build ──────────────────────────────────────────────────────────────────
   console.log(`\nBuilding @temanten/template-${slug}...`);
+  // Bake the versioned CDN prefix into the bundle so asset URLs resolve from CDN.
+  process.env.VITE_CDN_BASE_URL = `${cdnBaseUrl}/${cdnPrefix}`;
   execSync(`pnpm --filter "@temanten/template-${slug}" build`, {
     stdio: 'inherit',
     cwd: ROOT,
@@ -166,37 +200,24 @@ async function main() {
   const bucket = requireEnv('CDN_BUCKET');
   const s3 = buildS3Client();
 
-  const templateDir = join(TEMPLATES_DIR, slug);
-  const bundlePath = join(templateDir, 'dist', 'bundle.umd.js');
-  const cssPath = join(templateDir, 'dist', 'style.css');
+  const templateDir = join(TEMPLATES_DIR, slug as string);
+  const distDir = join(templateDir, 'dist');
+  const allFiles = existsSync(distDir) ? walkDir(distDir) : [];
 
-  console.log(`\nUploading to s3://${bucket}/${cdnPrefix}/`);
+  console.log(`\nUploading ${allFiles.length} files to s3://${bucket}/${cdnPrefix}/`);
 
-  await s3Put(
-    s3,
-    bucket,
-    `${cdnPrefix}/bundle.umd.js`,
-    readFileSync(bundlePath),
-    'application/javascript',
-    'public, max-age=31536000, immutable',
-  );
-
-  if (existsSync(cssPath)) {
-    await s3Put(
-      s3,
-      bucket,
-      `${cdnPrefix}/style.css`,
-      readFileSync(cssPath),
-      'text/css',
-      'public, max-age=31536000, immutable',
-    );
+  for (const filePath of allFiles) {
+    const relPath = relative(distDir, filePath);
+    const s3Key = `${cdnPrefix}/${relPath}`;
+    await s3Put(s3, bucket, s3Key, readFileSync(filePath), getContentType(filePath), 'public, max-age=31536000, immutable');
+    console.log(`  ✓ ${relPath}`);
   }
 
   // ── Update registry ────────────────────────────────────────────────────────
   console.log('\nUpdating registry.json on CDN...');
 
   const registry = await fetchRegistry(s3, bucket);
-  const entry: Manifest = { ...template.manifest, version, bundleUrl, cssUrl };
+  const entry: Manifest = { ...template.manifest, version: version as string, bundleUrl, cssUrl };
   const idx = registry.findIndex((t) => t.slug === slug);
   if (idx >= 0) registry[idx] = entry;
   else registry.push(entry);
