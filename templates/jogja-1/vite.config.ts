@@ -2,28 +2,12 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
-import type { Plugin } from 'vite';
 
 const SLUG = 'jogja-1';
 const UMD_NAME = `TemantanTemplate_${SLUG.replace(/-/g, '')}`;
 
-// Rewrites absolute /fonts/ paths to relative ./fonts/ in the built style.css so
-// fonts resolve correctly when the CSS is served from the CDN (not the host origin).
-const rewriteCssFontUrls = (): Plugin => ({
-  name: 'rewrite-css-font-urls',
-  apply: 'build',
-  closeBundle() {
-    const cssPath = path.resolve(__dirname, 'dist/style.css');
-    if (!existsSync(cssPath)) return;
-    const css = readFileSync(cssPath, 'utf-8');
-    const rewritten = css.replace(/url\(\/fonts\//g, 'url(./fonts/');
-    writeFileSync(cssPath, rewritten);
-  },
-});
-
 export default defineConfig(({ command }) => ({
-  plugins: [react(), tailwindcss(), rewriteCssFontUrls()],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
