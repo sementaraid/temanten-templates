@@ -88,20 +88,26 @@ async function invalidateCdn(slug: string, version: string): Promise<void> {
     return;
   }
 
+  const prefix = `/templates/${slug}/v${version}`;
+  const paths = [
+    `${prefix}/bundle.umd.js`,
+    `${prefix}/style.css`,
+    `${prefix}/fonts/*`,
+  ];
+
   const cf = new CloudFrontClient({ region: process.env.AWS_DEFAULT_REGION ?? 'us-east-1' });
+
   await cf.send(
     new CreateInvalidationCommand({
-      DistributionId: process.env.VITE_CDN_DISTRIBUTION_ID!,
+      DistributionId: distributionId,
       InvalidationBatch: {
-        CallerReference: `fix-fonts-cors-${Date.now()}`,
-        Paths: {
-          Quantity: 1,
-          Items: ['/templates/*'],  // wipe everything
-        },
+        CallerReference: `${slug}-v${version}-${Date.now()}`,
+        Paths: { Quantity: paths.length, Items: paths },
       },
     }),
   );
-  console.log(`  ✓ Invalidated`);
+
+  console.log(`  ✓ Invalidated ${paths.join(', ')}`);
 }
 
 async function fetchRegistry(client: S3Client, bucket: string): Promise<Manifest[]> {
