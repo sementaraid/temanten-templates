@@ -8,6 +8,7 @@ const UMD_NAME = `TemantanTemplate_${SLUG.replace(/-/g, '')}`;
 
 export default defineConfig(({ command }) => ({
   plugins: [react(), tailwindcss()],
+  envDir: __dirname,
   resolve: {
     dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
     alias: {

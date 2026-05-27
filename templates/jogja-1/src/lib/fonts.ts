@@ -1,15 +1,11 @@
-import { assetUrl } from './asset';
-
-const BASE = import.meta.env.NODE_ENV === 'production'
-  ? '/templates/jogja-1/v1.0.0/fonts'
-  : '/fonts';
+import { assetUrl } from "./asset";
 
 function load(
   family: string,
   file: string,
   descriptors?: FontFaceDescriptors,
 ): Promise<void> {
-  const url = assetUrl(`${BASE}/${file}`);
+  const url =  assetUrl('/fonts/' + file);
   const face = new FontFace(family, `url("${url}") format("truetype")`, {
     display: 'swap',
     ...descriptors,
