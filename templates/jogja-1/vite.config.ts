@@ -1,14 +1,25 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
+import { readFileSync } from 'node:fs';
 
 const SLUG = 'jogja-1';
 const UMD_NAME = `TemantanTemplate_${SLUG.replace(/-/g, '')}`;
+const SCRIPTS_DIR = path.resolve(__dirname, '../../scripts');
+const manifest = JSON.parse(readFileSync(path.resolve(__dirname, 'manifest.json'), 'utf-8'));
 
-export default defineConfig(({ command }) => ({
+export default defineConfig(({ command, mode }) => {
+  const env = loadEnv(mode, SCRIPTS_DIR, '');
+  const version = process.env.VITE_DEPLOY_VERSION ?? manifest.version;
+  const cdnVersionedBase = `${env.VITE_CDN_BASE_URL}/templates/${SLUG}/v${version}`;
+
+  return {
   plugins: [react(), tailwindcss()],
-  envDir: __dirname,
+  envDir: SCRIPTS_DIR,
+  define: {
+    'import.meta.env.VITE_CDN_BASE_URL': JSON.stringify(cdnVersionedBase),
+  },
   resolve: {
     dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
     alias: {
@@ -45,4 +56,5 @@ export default defineConfig(({ command }) => ({
     outDir: 'dist',
     emptyOutDir: true,
   },
-}));
+  };
+});

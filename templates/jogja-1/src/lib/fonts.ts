@@ -6,6 +6,7 @@ function load(
   descriptors?: FontFaceDescriptors,
 ): Promise<void> {
   const url =  assetUrl('/fonts/' + file);
+  console.debug(`Loading font: ${family} (${file}), url: ${url}, descriptors: ${JSON.stringify(descriptors)}`);
   const face = new FontFace(family, `url("${url}") format("truetype")`, {
     display: 'swap',
     ...descriptors,

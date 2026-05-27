@@ -1,4 +1,3 @@
-const CDN_BASE = import.meta.env.VITE_CDN_BASE_URL
-const BASE = CDN_BASE + '/templates/jogja-1/v1.0.0';
+const CDN_BASE = import.meta.env.VITE_CDN_BASE_URL || '';
 
-export const assetUrl = (path: string): string => `${BASE}${path}`
+export const assetUrl = (path: string): string => `${CDN_BASE}${path}`
