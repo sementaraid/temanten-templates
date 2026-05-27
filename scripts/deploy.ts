@@ -7,14 +7,17 @@
  * Non-interactive (CI / scripted):
  *   pnpm deploy --slug jogja-1 --version 1.0.1 --yes
  */
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import { select, input, confirm } from '@inquirer/prompts';
 import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { CloudFrontClient, CreateInvalidationCommand } from '@aws-sdk/client-cloudfront';
 import { execSync } from 'node:child_process';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join, dirname, resolve, extname, relative } from 'node:path';
 import { parseArgs } from 'node:util';
+
+dotenv.config({ path: join(dirname(fileURLToPath(import.meta.url)), '.env') });
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
@@ -76,6 +79,29 @@ async function s3Put(
       CacheControl: cacheControl,
     }),
   );
+}
+
+async function invalidateCdn(slug: string, version: string): Promise<void> {
+  const distributionId = process.env.VITE_CDN_DISTRIBUTION_ID;
+  if (!distributionId) {
+    console.log('\nSkipping CloudFront invalidation (VITE_CDN_DISTRIBUTION_ID not set).');
+    return;
+  }
+
+  const cf = new CloudFrontClient({ region: process.env.AWS_DEFAULT_REGION ?? 'us-east-1' });
+  await cf.send(
+    new CreateInvalidationCommand({
+      DistributionId: process.env.VITE_CDN_DISTRIBUTION_ID!,
+      InvalidationBatch: {
+        CallerReference: `fix-fonts-cors-${Date.now()}`,
+        Paths: {
+          Quantity: 1,
+          Items: ['/templates/*'],  // wipe everything
+        },
+      },
+    }),
+  );
+  console.log(`  ✓ Invalidated`);
 }
 
 async function fetchRegistry(client: S3Client, bucket: string): Promise<Manifest[]> {
@@ -168,7 +194,7 @@ async function main() {
   }
 
   // ── Summary & confirmation ─────────────────────────────────────────────────
-  const cdnBaseUrl = requireEnv('CDN_BASE_URL');
+  const cdnBaseUrl = requireEnv('VITE_CDN_BASE_URL');
   const cdnPrefix = `templates/${slug}/v${version}`;
   const bundleUrl = `${cdnBaseUrl}/${cdnPrefix}/bundle.umd.js`;
   const cssUrl = `${cdnBaseUrl}/${cdnPrefix}/style.css`;
@@ -176,7 +202,7 @@ async function main() {
   console.log('');
   console.log('  Template :', `${template.manifest.name} (${slug}@${version})`);
   console.log('  Bundle   :', bundleUrl);
-  console.log('  Registry :', requireEnv('REGISTRY_URL'));
+  console.log('  Registry :', requireEnv('VITE_REGISTRY_URL'));
   console.log('');
 
   if (!args.yes) {
@@ -189,15 +215,14 @@ async function main() {
 
   // ── Build ──────────────────────────────────────────────────────────────────
   console.log(`\nBuilding @temanten/template-${slug}...`);
-  // Bake the versioned CDN prefix into the bundle so asset URLs resolve from CDN.
-  process.env.VITE_CDN_BASE_URL = `${cdnBaseUrl}/${cdnPrefix}`;
+  process.env.VITE_DEPLOY_VERSION = version as string;
   execSync(`pnpm --filter "@temanten/template-${slug}" build`, {
     stdio: 'inherit',
     cwd: ROOT,
   });
 
   // ── Upload ─────────────────────────────────────────────────────────────────
-  const bucket = requireEnv('CDN_BUCKET');
+  const bucket = requireEnv('VITE_CDN_BUCKET');
   const s3 = buildS3Client();
 
   const templateDir = join(TEMPLATES_DIR, slug as string);
@@ -230,6 +255,10 @@ async function main() {
     'application/json',
     'no-cache',
   );
+
+  // ── CloudFront invalidation ────────────────────────────────────────────────
+  console.log('\nInvalidating CloudFront cache...');
+  await invalidateCdn(slug as string, version as string);
 
   console.log(`\n✓ Done. ${bundleUrl}`);
 }

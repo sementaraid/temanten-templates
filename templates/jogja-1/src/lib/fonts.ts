@@ -61,7 +61,7 @@ const OPEN_SANS_SEMICONDENSED_VARIANTS: Array<[string, FontFaceDescriptors]> = [
   ['open-sans/static/OpenSans_SemiCondensed-ExtraBoldItalic.ttf', { weight: '800', style: 'italic', stretch: 'semi-condensed' }],
 ];
 
-export function loadFonts(): void {
+export function loadFonts(): Promise<void> {
   const promises: Promise<void>[] = [
     load('Arashveti', 'arashveti-font/Arashveti-EapnW.ttf'),
     ...OPEN_SANS_VARIANTS.map(([file, desc]) => load('Open Sans', file, desc)),
@@ -69,5 +69,11 @@ export function loadFonts(): void {
     ...OPEN_SANS_SEMICONDENSED_VARIANTS.map(([file, desc]) => load('Open Sans SemiCondensed', file, desc)),
   ];
 
-  Promise.allSettled(promises);
+  return Promise.allSettled(promises).then((results) => {
+    results.forEach((result, i) => {
+      if (result.status === 'rejected') {
+        console.error(`Font load failed [${i}]:`, result.reason);
+      }
+    });
+  });
 }
