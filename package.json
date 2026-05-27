@@ -1,0 +1,18 @@
+{
+  "name": "temanten-templates",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter \"@temanten/template-$npm_config_template\" dev",
+    "build": "pnpm --filter \"@temanten/template-$npm_config_template\" build",
+    "build:all": "pnpm -r build",
+    "deploy": "tsx scripts/deploy.ts"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-s3": "^3.0.0",
+    "@inquirer/prompts": "^7.0.0",
+    "dotenv": "^16.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "~5.9.3"
+  }
+}
