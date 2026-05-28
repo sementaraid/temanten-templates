@@ -8,7 +8,7 @@
  *   pnpm create-template --slug bandung-1 --name "Bandung Klasik" --description "..." --category ELEGANT --tags "floral,classic" --yes
  */
 import { select, input, confirm } from '@inquirer/prompts';
-import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
+import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join, dirname, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
@@ -16,6 +16,10 @@ import { parseArgs } from 'node:util';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 const TEMPLATES_DIR = join(ROOT, 'templates');
+
+const sdkPkg = JSON.parse(readFileSync(resolve(ROOT, '../temanten-sdk/package.json'), 'utf-8'));
+const SDK_VERSION: string = sdkPkg.version;
+const SDK_URL = `https://github.com/sementaraid/temanten-sdk/releases/download/v${SDK_VERSION}/temanten-sdk-${SDK_VERSION}.tgz`;
 
 const CATEGORIES = ['ELEGANT', 'MODERN', 'RUSTIC', 'MINIMALIST', 'TRADITIONAL'] as const;
 type Category = (typeof CATEGORIES)[number];
@@ -58,7 +62,7 @@ function generateFiles(templateDir: string, cfg: TemplateConfig) {
         scripts: { dev: 'vite', build: 'vite build', preview: 'vite preview' },
         peerDependencies: { motion: '^12.0.0', react: '^19.0.0', 'react-dom': '^19.0.0' },
         dependencies: {
-          '@temanten/sdk': 'link:../../../temanten-sdk',
+          '@temanten/sdk': SDK_URL,
           'class-variance-authority': '^0.7.1',
           clsx: '^2.1.1',
           'tailwind-merge': '^3.4.0',
