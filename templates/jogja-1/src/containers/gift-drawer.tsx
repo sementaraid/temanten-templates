@@ -1,8 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { DebitCard } from './debit-card';
 import { CopyableText } from '../components/invitation/copyable-text';
-import { useTemantenSetter, useTemantenState } from '@temanten/sdk';
-import { useScrollLock } from '../hooks/useScrollLock';
+import { useTemantenSetter, useTemantenState, useScrollLock } from '@temanten/sdk';
 
 const GiftDrawer = () => {
   const { drawerOpen, invitationData } = useTemantenState();

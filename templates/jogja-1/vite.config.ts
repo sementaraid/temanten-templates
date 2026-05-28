@@ -4,10 +4,10 @@ import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 import { readFileSync } from 'node:fs';
 
-const SLUG = 'jogja-1';
-const UMD_NAME = `TemantanTemplate_${SLUG.replace(/-/g, '')}`;
 const SCRIPTS_DIR = path.resolve(__dirname, '../../scripts');
 const manifest = JSON.parse(readFileSync(path.resolve(__dirname, 'manifest.json'), 'utf-8'));
+const SLUG: string = manifest.slug;
+const UMD_NAME = `TemantanTemplate_${SLUG.replace(/-/g, '')}`;
 
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, SCRIPTS_DIR, '');
