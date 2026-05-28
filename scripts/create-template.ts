@@ -474,7 +474,7 @@ const MAIN_CSS = `@import 'tailwindcss';
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
-  const { values: args } = parseArgs({
+  const { values: rawArgs } = parseArgs({
     args: process.argv.slice(2),
     options: {
       slug: { type: 'string' },
@@ -487,6 +487,15 @@ async function main() {
     },
     strict: false,
   });
+  const args = rawArgs as {
+    slug?: string;
+    name?: string;
+    description?: string;
+    category?: string;
+    tags?: string;
+    version?: string;
+    yes?: boolean;
+  };
 
   // ── Slug ───────────────────────────────────────────────────────────────────
   let slug = args.slug;
