@@ -13,6 +13,7 @@ import { SplashScreen } from './containers/welcome';
 import { Gift } from './containers/gift';
 import { Navigation } from './containers/navigation';
 import { FloatingControls } from './containers/floating-controls';
+import { GuestPhotoMoment } from './containers/photo-moment';
 import { QrCheckin } from './containers/qr-checkin';
 
 export type TemplateSectionEntry = {
@@ -37,5 +38,6 @@ export const TEMPLATE_SECTIONS: TemplateSectionEntry[] = [
   { id: 'gift', Component: Gift },
   { id: 'comments', Component: Comments },
   { id: 'qr-checkin', Component: QrCheckin },
+  { id: 'photo-moment', Component: GuestPhotoMoment },
   { id: 'footer', Component: Footer },
 ];
