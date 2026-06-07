@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "tsc": "tsc --noEmit"
   },
   "peerDependencies": {
     "motion": "^12.0.0",
@@ -15,7 +16,7 @@
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",
-    "@temanten/sdk": "https://github.com/sementaraid/temanten-sdk/releases/download/v0.1.11/temanten-sdk-0.1.11.tgz",
+    "@temanten/sdk": "https://github.com/sementaraid/temanten-sdk/releases/download/v0.1.13/temanten-sdk-0.1.13.tgz",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
