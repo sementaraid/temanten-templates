@@ -20,6 +20,9 @@ export default defineConfig(({ command, mode }) => {
   define: {
     'import.meta.env.VITE_CDN_BASE_URL': JSON.stringify(cdnVersionedBase),
   },
+  server:{
+    host: true,
+  },
   resolve: {
     dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
     alias: {
