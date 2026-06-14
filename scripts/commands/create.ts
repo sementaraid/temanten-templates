@@ -118,10 +118,7 @@ export async function runCreate(opts: {
 
   console.log(chalk.bold('\nGenerating files…\n'));
 
-  // Resolve SDK URL from sibling package
-  const sdkPkg = JSON.parse(readFileSync(resolve(ROOT, '../temanten-sdk/package.json'), 'utf-8'));
-  const sdkVersion: string = sdkPkg.version;
-  const sdkUrl = `https://github.com/sementaraid/temanten-sdk/releases/download/v${sdkVersion}/temanten-sdk-${sdkVersion}.tgz`;
+  const sdkUrl = `git+ssh://git@github.com/sementaraid/temanten-sdk.git#v1.0.0`;
 
   // Dynamic files (not in base/)
   writeFile(

@@ -23,6 +23,7 @@ import { runBuild } from './commands/build.js';
 import { runDeploy } from './commands/deploy.js';
 import { runCreate } from './commands/create.js';
 import { runList } from './commands/list.js';
+import { runUpdate } from './commands/update.js';
 
 
 function bail(err: unknown): never {
@@ -72,5 +73,13 @@ program
   .command('list')
   .description('List all local templates and their deploy status')
   .action((opts) => runList(opts).catch(bail));
+
+program
+  .command('update')
+  .description('Update @temanten/sdk version in one or all template package.json files')
+  .option('--slug <slug>', 'Only update this template (omit to update all)')
+  .option('--version <version>', 'SDK version to pin (default: reads from sibling temanten-sdk/package.json)')
+  .option('-y, --yes', 'Skip confirmation prompt')
+  .action((opts) => runUpdate(opts).catch(bail));
 
 program.parse();
