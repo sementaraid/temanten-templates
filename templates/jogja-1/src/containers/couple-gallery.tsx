@@ -75,6 +75,26 @@ export const CoupleGallery = () => {
               />
             ))}
           </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6 px-4">
+            {gallery.map((url: string, index: number) => (
+              <div
+                key={url}
+                className="relative rounded-xl overflow-hidden h-[140px]
+                  bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/50 dark:border-gray-700/50
+                  before:absolute before:inset-0 before:rounded-xl
+                  before:bg-gradient-to-br before:from-white/50 before:via-white/10 before:to-transparent
+                  before:pointer-events-none"
+              >
+                <img
+                  src={url}
+                  alt={`Galeri foto ${index + 1}`}
+                  className="relative w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
         </motion.div>
       </div>
 
