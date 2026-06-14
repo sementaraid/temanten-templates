@@ -1,6 +1,7 @@
 import { motion, useInView } from 'motion/react';
 import { Carousel, CarouselContent, CarouselItem } from '../components/ui/carousel';
-import { useRef, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
+import type { CarouselApi } from '../components/ui/carousel';
 import { useInvitationStore } from '@temanten/sdk';
 import { assetUrl } from '../lib/asset';
 
@@ -10,9 +11,17 @@ export const CoupleGallery = () => {
   const { data: invitationData } = useInvitationStore();
   const { gallery } = invitationData;
   const [current, setCurrent] = useState(0);
+  const apiRef = useRef<CarouselApi>(null);
+
+  const handleSetApi = useCallback((emblaApi: CarouselApi) => {
+    if (!emblaApi) return;
+    apiRef.current = emblaApi;
+    emblaApi.on('select', () => setCurrent(emblaApi.selectedScrollSnap()));
+  }, []);
 
   if (!gallery?.length) return null;
 
+  console.log('Gallery data:', gallery);
   return (
     <section
       id="gallery-section"
@@ -36,18 +45,15 @@ export const CoupleGallery = () => {
           <Carousel
             opts={{ align: 'center', loop: false }}
             className="w-full px-4"
-            setApi={(api) => {
-              if (!api) return;
-              api.on('select', () => setCurrent(api.selectedScrollSnap()));
-            }}
+            setApi={handleSetApi}
           >
             <CarouselContent>
               {gallery.map((url: string, index: number) => (
                 <CarouselItem key={url} className="h-full">
                   <div
-                    className="relative flex items-center justify-center rounded-2xl overflow-hidden h-[320px]
+                    className="relative flex items-center justify-center rounded-xl overflow-hidden h-[320px]
                       bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/50 dark:border-gray-700/50
-                      before:absolute before:inset-0 before:rounded-2xl
+                      before:absolute before:inset-0 before:rounded-xl
                       before:bg-gradient-to-br before:from-white/50 before:via-white/10 before:to-transparent
                       before:pointer-events-none"
                   >
@@ -76,15 +82,20 @@ export const CoupleGallery = () => {
             ))}
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6 px-4">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mt-6 px-4">
             {gallery.map((url: string, index: number) => (
               <div
                 key={url}
-                className="relative rounded-xl overflow-hidden h-[140px]
-                  bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/50 dark:border-gray-700/50
+                onClick={() => apiRef.current?.scrollTo(index)}
+                className={`relative rounded-md overflow-hidden h-[70px] sm:h-[100px] cursor-pointer
+                  backdrop-blur-md border transition-all duration-300
                   before:absolute before:inset-0 before:rounded-xl
                   before:bg-gradient-to-br before:from-white/50 before:via-white/10 before:to-transparent
-                  before:pointer-events-none"
+                  before:pointer-events-none
+                  ${index === current
+                    ? 'border-[#a85200] dark:border-[#e8a060] ring-2 ring-[#a85200] dark:ring-[#e8a060]'
+                    : 'border-white/50 dark:border-gray-700/50 bg-white/30 dark:bg-white/5 opacity-60 hover:opacity-100'
+                  }`}
               >
                 <img
                   src={url}
