@@ -73,7 +73,7 @@ export const FloatingControls = () => {
                   <motion.button
                     type="button"
                     onClick={() => handleAction(() => setPlayAudio(!playAudio))}
-                    className="w-9 h-9 flex items-center justify-center rounded-[10px] hover:bg-[#a85200]/10 dark:hover:bg-[#a85200]/20 transition-colors"
+                    className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[#a85200]/10 dark:hover:bg-[#a85200]/20 transition-colors"
                     whileTap={{ scale: 0.88 }}
                     aria-label={playAudio ? 'Senyapkan musik' : 'Nyalakan musik'}
                   >
@@ -87,7 +87,7 @@ export const FloatingControls = () => {
                   <motion.button
                     type="button"
                     onClick={() => handleAction(() => setDarkMode(!darkMode))}
-                    className="w-9 h-9 flex items-center justify-center rounded-[10px] hover:bg-[#a85200]/10 dark:hover:bg-[#a85200]/20 transition-colors"
+                    className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[#a85200]/10 dark:hover:bg-[#a85200]/20 transition-colors"
                     whileTap={{ scale: 0.88 }}
                     aria-label={darkMode ? 'Mode terang' : 'Mode gelap'}
                   >

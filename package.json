@@ -3,11 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter \"@temanten/template-$npm_config_template\" dev",
-    "build": "pnpm --filter \"@temanten/template-$npm_config_template\" build",
-    "build:all": "pnpm -r build",
-    "template:deploy": "tsx scripts/deploy.ts",
-    "template:create": "tsx scripts/create-template.ts"
+    "temanten": "tsx scripts/temanten.ts"
   },
   "devDependencies": {
     "@aws-sdk/client-cloudfront": "^3.1055.0",
