@@ -4,6 +4,7 @@ import { execSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve, join, relative } from 'node:path';
+import dotenv from 'dotenv';
 import { readTemplates, pickTemplate, type Manifest } from '../lib/templates.js';
 import {
   requireEnv,
@@ -17,8 +18,22 @@ import {
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const TEMPLATES_DIR = join(ROOT, 'templates');
+const SCRIPTS_DIR = join(ROOT, 'scripts');
 
-export async function runDeploy(opts: { slug?: string; version?: string; yes?: boolean }) {
+type DeployEnv = 'dev' | 'prod';
+
+function loadEnv(env: DeployEnv): void {
+  const envFile = env === 'dev' ? '.env.dev' : '.env';
+  const envPath = join(SCRIPTS_DIR, envFile);
+  if (!existsSync(envPath)) {
+    throw new Error(`Env file not found: ${envPath}`);
+  }
+  dotenv.config({ path: envPath, override: true });
+}
+
+export async function runDeploy(opts: { slug?: string; version?: string; env?: string; yes?: boolean }) {
+  const deployEnv: DeployEnv = opts.env === 'dev' ? 'dev' : 'prod';
+  loadEnv(deployEnv);
   const templates = readTemplates(TEMPLATES_DIR);
   if (!templates.length) {
     console.error(chalk.red('No templates found. Run `pnpm temanten create` first.'));
@@ -37,7 +52,9 @@ export async function runDeploy(opts: { slug?: string; version?: string; yes?: b
   const bundleUrl = `${cdnBaseUrl}/${cdnPrefix}/bundle.umd.js`;
   const cssUrl = `${cdnBaseUrl}/${cdnPrefix}/style.css`;
 
+  const envLabel = deployEnv === 'dev' ? chalk.yellow('dev') : chalk.green('prod');
   console.log('');
+  console.log(`  ${chalk.dim('Env')}      : ${envLabel}`);
   console.log(`  ${chalk.dim('Template')} : ${chalk.cyan(slug)} @ ${chalk.yellow(version)}`);
   console.log(`  ${chalk.dim('Bundle')}   : ${bundleUrl}`);
   console.log(`  ${chalk.dim('Registry')} : ${requireEnv('VITE_REGISTRY_URL')}`);
@@ -62,6 +79,7 @@ export async function runDeploy(opts: { slug?: string; version?: string; yes?: b
   const distDir = join(TEMPLATES_DIR, slug, 'dist');
   const allFiles = existsSync(distDir) ? walkDir(distDir) : [];
 
+  const cacheControl = deployEnv === 'dev' ? 'no-cache' : 'public, max-age=31536000, immutable';
   console.log(chalk.bold(`\nUploading ${allFiles.length} file(s) to s3://${bucket}/${cdnPrefix}/`));
   for (const filePath of allFiles) {
     const relPath = relative(distDir, filePath);
@@ -71,7 +89,7 @@ export async function runDeploy(opts: { slug?: string; version?: string; yes?: b
       `${cdnPrefix}/${relPath}`,
       readFileSync(filePath),
       getContentType(filePath),
-      'public, max-age=31536000, immutable',
+      cacheControl,
     );
     console.log(chalk.green('  ✓') + ' ' + chalk.dim(relPath));
   }

@@ -3,6 +3,7 @@ import { createElement } from 'react';
 import { Audio, SnowfallEffect } from '@temanten/sdk';
 import { assetUrl } from './lib/asset';
 import { Brides } from './containers/brides';
+import { CoupleGallery } from './containers/couple-gallery';
 import { Ceremony } from './containers/ceremony';
 import { CeremonyAfter } from './containers/ceremony-after';
 import { Comments } from './containers/comments';
@@ -32,6 +33,7 @@ export const TEMPLATE_SECTIONS: TemplateSectionEntry[] = [
   { id: 'floating-controls', Component: FloatingControls },
   { id: 'invitation', Component: Invitation },
   { id: 'brides', Component: Brides },
+  { id: 'couple-gallery', Component: CoupleGallery },
   { id: 'ceremony', Component: Ceremony },
   { id: 'ceremony-after', Component: CeremonyAfter },
   { id: 'love-story', Component: LoveStory },

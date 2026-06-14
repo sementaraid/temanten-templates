@@ -25,6 +25,7 @@ import { runDev } from './commands/dev.js';
 import { runBuild } from './commands/build.js';
 import { runDeploy } from './commands/deploy.js';
 import { runCreate } from './commands/create.js';
+import { runList } from './commands/list.js';
 
 dotenv.config({ path: join(dirname(fileURLToPath(import.meta.url)), '.env') });
 
@@ -55,6 +56,7 @@ program
   .description('Build, upload, and register a template')
   .option('--slug <slug>', 'Template slug')
   .option('--version <version>', 'Version to deploy')
+  .option('--env <env>', 'Target environment: dev or prod (default: prod)')
   .option('-y, --yes', 'Skip confirmation prompt')
   .action((opts) => runDeploy(opts).catch(bail));
 
@@ -69,5 +71,10 @@ program
   .option('--version <version>', 'Initial version')
   .option('-y, --yes', 'Skip confirmation prompt')
   .action((opts) => runCreate(opts).catch(bail));
+
+program
+  .command('list')
+  .description('List all local templates and their deploy status')
+  .action((opts) => runList(opts).catch(bail));
 
 program.parse();

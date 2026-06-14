@@ -1,12 +1,11 @@
-import { motion, useInView } from 'motion/react';
+import { motion } from 'motion/react';
 import { useTemantenState } from '@temanten/sdk';
-import { useRef } from 'react';
 import { assetUrl } from '../lib/asset';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 export const Brides = () => {
-  const ref = useRef<HTMLDivElement | null>(null);
+  const [ref, isInView] = useScrollReveal<HTMLDivElement>();
   const { screenState, invitationData } = useTemantenState();
-  const isInView = useInView(ref, { once: true });
   const { bride, groom } = invitationData;
 
   const isActive = screenState === 'main';
