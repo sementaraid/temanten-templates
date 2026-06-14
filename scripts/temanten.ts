@@ -17,9 +17,6 @@
 
 import { Command } from 'commander';
 import chalk from 'chalk';
-import dotenv from 'dotenv';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
 import { CATEGORIES } from './constants.js';
 import { runDev } from './commands/dev.js';
 import { runBuild } from './commands/build.js';
@@ -27,7 +24,6 @@ import { runDeploy } from './commands/deploy.js';
 import { runCreate } from './commands/create.js';
 import { runList } from './commands/list.js';
 
-dotenv.config({ path: join(dirname(fileURLToPath(import.meta.url)), '.env') });
 
 function bail(err: unknown): never {
   console.error(chalk.red(err instanceof Error ? err.message : String(err)));
@@ -56,7 +52,7 @@ program
   .description('Build, upload, and register a template')
   .option('--slug <slug>', 'Template slug')
   .option('--version <version>', 'Version to deploy')
-  .option('--env <env>', 'Target environment: dev or prod (default: prod)')
+  .option('--env <env>', 'Target environment: development or production (default: production)')
   .option('-y, --yes', 'Skip confirmation prompt')
   .action((opts) => runDeploy(opts).catch(bail));
 

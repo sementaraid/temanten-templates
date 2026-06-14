@@ -2,5 +2,5 @@ node_modules/
 .DS_Store
 .env
 .claude
-.env.dev
-.env.prod
+.env.development
+.env.production

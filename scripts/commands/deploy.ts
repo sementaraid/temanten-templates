@@ -20,10 +20,10 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const TEMPLATES_DIR = join(ROOT, 'templates');
 const SCRIPTS_DIR = join(ROOT, 'scripts');
 
-type DeployEnv = 'dev' | 'prod';
+type DeployEnv = 'development' | 'production';
 
 function loadEnv(env: DeployEnv): void {
-  const envFile = env === 'dev' ? '.env.dev' : '.env';
+  const envFile = env === 'development' ? '.env.development' : '.env.production';
   const envPath = join(SCRIPTS_DIR, envFile);
   if (!existsSync(envPath)) {
     throw new Error(`Env file not found: ${envPath}`);
@@ -32,7 +32,7 @@ function loadEnv(env: DeployEnv): void {
 }
 
 export async function runDeploy(opts: { slug?: string; version?: string; env?: string; yes?: boolean }) {
-  const deployEnv: DeployEnv = opts.env === 'dev' ? 'dev' : 'prod';
+  const deployEnv: DeployEnv = opts.env === 'development' ? 'development' : 'production';
   loadEnv(deployEnv);
   const templates = readTemplates(TEMPLATES_DIR);
   if (!templates.length) {
@@ -52,7 +52,7 @@ export async function runDeploy(opts: { slug?: string; version?: string; env?: s
   const bundleUrl = `${cdnBaseUrl}/${cdnPrefix}/bundle.umd.js`;
   const cssUrl = `${cdnBaseUrl}/${cdnPrefix}/style.css`;
 
-  const envLabel = deployEnv === 'dev' ? chalk.yellow('dev') : chalk.green('prod');
+  const envLabel = deployEnv === 'development' ? chalk.yellow('development') : chalk.green('production');
   console.log('');
   console.log(`  ${chalk.dim('Env')}      : ${envLabel}`);
   console.log(`  ${chalk.dim('Template')} : ${chalk.cyan(slug)} @ ${chalk.yellow(version)}`);
@@ -79,7 +79,7 @@ export async function runDeploy(opts: { slug?: string; version?: string; env?: s
   const distDir = join(TEMPLATES_DIR, slug, 'dist');
   const allFiles = existsSync(distDir) ? walkDir(distDir) : [];
 
-  const cacheControl = deployEnv === 'dev' ? 'no-cache' : 'public, max-age=31536000, immutable';
+  const cacheControl = deployEnv === 'development' ? 'no-cache' : 'public, max-age=31536000, immutable';
   console.log(chalk.bold(`\nUploading ${allFiles.length} file(s) to s3://${bucket}/${cdnPrefix}/`));
   for (const filePath of allFiles) {
     const relPath = relative(distDir, filePath);

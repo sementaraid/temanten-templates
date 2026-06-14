@@ -41,13 +41,13 @@ The CLI reads environment variables from files inside `scripts/`. Two environmen
 
 | File | Purpose |
 |---|---|
-| `scripts/.env` | Production — `temanten` bucket, production CloudFront |
-| `scripts/.env.dev` | Development — `temanten-dev` bucket, dev CloudFront |
+| `scripts/.env.production` | Production — `temanten` bucket, production CloudFront |
+| `scripts/.env.development` | Development — `temanten-dev` bucket, dev CloudFront |
 
-Both files are gitignored. Copy and fill in `scripts/.env.dev` before deploying to the dev bucket:
+Both files are gitignored. Copy and fill in `scripts/.env.development` before deploying to the dev bucket:
 
 ```bash
-# scripts/.env.dev
+# scripts/.env.development
 VITE_CDN_BUCKET=temanten-dev
 VITE_CDN_BASE_URL=https://<dev-cloudfront-domain>
 VITE_REGISTRY_URL=https://<dev-cloudfront-domain>/templates/registry.json
@@ -92,7 +92,7 @@ Produces `templates/<slug>/dist/bundle.umd.js` and `style.css`. The UMD global i
 
 ```bash
 # deploy to dev bucket (for templates still in development)
-pnpm temanten deploy --slug jogja-1 --env dev
+pnpm temanten deploy --slug jogja-1 --env development
 
 # deploy to production bucket (released templates)
 pnpm temanten deploy --slug jogja-1
@@ -103,11 +103,11 @@ pnpm temanten deploy --slug jogja-1 --version 1.2.0 --yes
 |---|---|---|
 | `--slug` | interactive | Template slug |
 | `--version` | from `manifest.json` | Semver version to deploy |
-| `--env` | `prod` | Target environment: `dev` or `prod` |
+| `--env` | `production` | Target environment: `development` or `production` |
 | `--yes` / `-y` | false | Skip confirmation prompt |
 
 What the deploy command does:
-1. Loads `scripts/.env.dev` or `scripts/.env` depending on `--env`
+1. Loads `scripts/.env.development` or `scripts/.env.production` depending on `--env`
 2. Runs `vite build` with `VITE_DEPLOY_VERSION` injected
 3. Uploads `dist/` to `s3://<bucket>/templates/<slug>/v<version>/`
 4. Updates `templates/registry.json` in the bucket
@@ -220,10 +220,10 @@ export function Hero() {
 ## Development workflow
 
 ```
-create → dev → build → deploy --env dev → (review) → deploy --env prod
+create → dev → build → deploy --env development → (review) → deploy
 ```
 
 1. `pnpm temanten create --slug <slug>` — scaffold the template
 2. `pnpm temanten dev --slug <slug>` — iterate locally
-3. `pnpm temanten deploy --slug <slug> --env dev` — publish to dev bucket for preview
+3. `pnpm temanten deploy --slug <slug> --env development` — publish to dev bucket for preview
 4. `pnpm temanten deploy --slug <slug>` — release to production
