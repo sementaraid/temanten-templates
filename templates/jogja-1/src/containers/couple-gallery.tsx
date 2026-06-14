@@ -1,69 +1,95 @@
-import { motion } from 'motion/react';
-import { useTemantenState } from '@temanten/sdk';
-import { useScrollReveal } from '../hooks/useScrollReveal';
+import { motion, useInView } from 'motion/react';
+import { Carousel, CarouselContent, CarouselItem } from '../components/ui/carousel';
+import { useRef, useState } from 'react';
+import { useInvitationStore } from '@temanten/sdk';
+import { assetUrl } from '../lib/asset';
 
 export const CoupleGallery = () => {
-  const [ref, isInView] = useScrollReveal<HTMLDivElement>();
-  const { screenState, invitationData } = useTemantenState();
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true });
+  const { data: invitationData } = useInvitationStore();
   const { gallery } = invitationData;
+  const [current, setCurrent] = useState(0);
 
   if (!gallery?.length) return null;
-
-  const isActive = screenState === 'main';
-  const shouldAnimate = isActive && isInView;
-
-  const containerVariants = {
-    hidden: {},
-    enter: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    enter: { opacity: 1, scale: 1, transition: { duration: 0.6 } },
-  };
-
-  const headingVariants = {
-    hidden: { y: -10, opacity: 0 },
-    enter: { y: 0, opacity: 1, transition: { duration: 1.2 } },
-  };
 
   return (
     <section
       id="gallery-section"
-      className="relative overflow-hidden py-12 px-4"
+      className="min-h-screen relative flex flex-col justify-center items-center px-4"
     >
-      <motion.div
-        ref={ref}
-        variants={containerVariants}
-        initial="hidden"
-        animate={shouldAnimate ? 'enter' : 'hidden'}
-      >
-        <motion.h2
-          variants={headingVariants}
-          className="font-arashveti text-2xl font-bold text-center text-[#a85200] dark:text-[#e8a060] mb-8"
+      <div ref={ref} className="container max-w-4xl">
+        <motion.h1
+          className="font-arashveti text-3xl font-bold text-center mb-8 text-[#a85200] dark:text-[#e8a060]"
+          initial={{ y: -24, opacity: 0 }}
+          animate={isInView ? { y: 0, opacity: 1 } : { y: -24, opacity: 0 }}
+          transition={{ duration: 0.6 }}
         >
-          Momen Kami
-        </motion.h2>
+          Galeri Kami
+        </motion.h1>
 
-        <div className="grid grid-cols-2 gap-2">
-          {gallery.map((url, index) => (
-            <motion.div
-              key={url}
-              variants={itemVariants}
-              className={`overflow-hidden rounded-xl ${
-                index === 0 && gallery.length >= 3 ? 'col-span-2 aspect-video' : 'aspect-square'
-              }`}
-            >
-              <img
-                src={url}
-                alt={`Momen pernikahan ${index + 1}`}
-                className="w-full h-full object-cover"
-                loading="lazy"
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <Carousel
+            opts={{ align: 'center', loop: false }}
+            className="w-full px-4"
+            setApi={(api) => {
+              if (!api) return;
+              api.on('select', () => setCurrent(api.selectedScrollSnap()));
+            }}
+          >
+            <CarouselContent>
+              {gallery.map((url: string, index: number) => (
+                <CarouselItem key={url} className="h-full">
+                  <div
+                    className="relative flex items-center justify-center rounded-2xl overflow-hidden h-[320px]
+                      bg-white/30 dark:bg-white/5 backdrop-blur-md border border-white/50 dark:border-gray-700/50
+                      before:absolute before:inset-0 before:rounded-2xl
+                      before:bg-gradient-to-br before:from-white/50 before:via-white/10 before:to-transparent
+                      before:pointer-events-none"
+                  >
+                    <img
+                      src={url}
+                      alt={`Galeri foto ${index + 1}`}
+                      className="relative w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+
+          <div className="flex justify-center gap-2 mt-4">
+            {gallery.map((_: string, index: number) => (
+              <span
+                key={index}
+                className={`block h-1.5 rounded-full transition-all duration-300 ${
+                  index === current
+                    ? 'w-5 bg-[#a85200] dark:bg-[#e8a060]'
+                    : 'w-1.5 bg-[#a85200]/30 dark:bg-[#e8a060]/30'
+                }`}
               />
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <img
+          src={assetUrl('/images/awan.png')}
+          alt="Awan Decoration"
+          className="w-full h-auto absolute -top-24 transform -scale-y-100"
+        />
+        <img
+          src={assetUrl('/images/awan.png')}
+          alt="Awan Decoration"
+          className="w-full h-auto absolute -bottom-24"
+        />
+      </div>
     </section>
   );
 };
