@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 import { createElement } from 'react';
-import { Audio, SnowfallEffect } from '@temanten/sdk';
+import { Audio, SnowfallEffect, useInvitationStore } from '@temanten/sdk';
 import { assetUrl } from './lib/asset';
 import { Brides } from './containers/brides';
 import { CoupleGallery } from './containers/couple-gallery';
@@ -22,8 +22,13 @@ export type TemplateSectionEntry = {
   Component: ComponentType;
 };
 
-const TemplateAudio: ComponentType = () =>
-  createElement(Audio, { src: assetUrl('/music/pawestri_cut.mp3') });
+const DEFAULT_MUSIC = assetUrl('/music/pawestri_cut.mp3');
+
+const TemplateAudio: ComponentType = () => {
+  const { data } = useInvitationStore();
+  const src = data.musicUrl ?? DEFAULT_MUSIC;
+  return createElement(Audio, { src });
+};
 
 export const TEMPLATE_SECTIONS: TemplateSectionEntry[] = [
   { id: 'splash', Component: SplashScreen },
