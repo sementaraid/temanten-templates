@@ -48,7 +48,6 @@ export const SplashScreen = () => {
                 onClick={() =>
                   setUiState((prev) => ({
                     ...prev,
-                    playAudio: prev.screenState === 'welcome',
                     screenState: 'main',
                   }))
                 }
