@@ -16,23 +16,16 @@ import { Navigation } from './containers/navigation';
 import { FloatingControls } from './containers/floating-controls';
 import { GuestPhotoMoment } from './containers/photo-moment';
 import { QrCheckin } from './containers/qr-checkin';
+import { InvitationAudio } from './components/invitation/music';
 
 export type TemplateSectionEntry = {
   id: string;
   Component: ComponentType;
 };
 
-const DEFAULT_MUSIC = assetUrl('/music/pawestri_cut.mp3');
-
-const TemplateAudio: ComponentType = () => {
-  const { data } = useInvitationStore();
-  const src = data.musicUrl ?? DEFAULT_MUSIC;
-  return createElement(Audio, { src });
-};
-
 export const TEMPLATE_SECTIONS: TemplateSectionEntry[] = [
   { id: 'splash', Component: SplashScreen },
-  { id: 'audio', Component: TemplateAudio },
+  { id: 'audio', Component: InvitationAudio },
   { id: 'snowfall', Component: SnowfallEffect },
   { id: 'navigation', Component: Navigation },
   { id: 'floating-controls', Component: FloatingControls },
