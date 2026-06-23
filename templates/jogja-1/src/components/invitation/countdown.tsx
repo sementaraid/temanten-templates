@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 
@@ -35,6 +35,8 @@ const computeTime = (targetDate: Date, now: number): CountdownTime => {
 
 export const Countdown = ({ targetDate, onComplete, children }: CountdownProps) => {
   const [now, setNow] = useState(() => Date.now());
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => { onCompleteRef.current = onComplete; });
 
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
@@ -44,8 +46,8 @@ export const Countdown = ({ targetDate, onComplete, children }: CountdownProps) 
   const time = computeTime(targetDate, now);
 
   useEffect(() => {
-    if (time.completed) onComplete?.();
-  }, [time.completed, onComplete]);
+    if (time.completed) onCompleteRef.current?.();
+  }, [time.completed]);
 
   return <>{children(time)}</>;
 };
