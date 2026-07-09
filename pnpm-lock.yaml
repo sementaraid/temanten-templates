@@ -42,8 +42,8 @@ importers:
         specifier: ^1.2.4
         version: 1.2.4(@types/react@19.2.15)(react@19.2.6)
       '@temanten/sdk':
-        specifier: github:sementaraid/temanten-sdk#v1.1.0
-        version: https://codeload.github.com/sementaraid/temanten-sdk/tar.gz/781d9f535bd688e50f970ac17ccee4c5af626947(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: github:sementaraid/temanten-sdk#v1.1.1
+        version: https://codeload.github.com/sementaraid/temanten-sdk/tar.gz/bf357598aa3b8f77b326814b871b3d1ff3f151bf(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -1052,9 +1052,9 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7 || ^8
 
-  '@temanten/sdk@https://codeload.github.com/sementaraid/temanten-sdk/tar.gz/781d9f535bd688e50f970ac17ccee4c5af626947':
-    resolution: {tarball: https://codeload.github.com/sementaraid/temanten-sdk/tar.gz/781d9f535bd688e50f970ac17ccee4c5af626947}
-    version: 1.1.0
+  '@temanten/sdk@https://codeload.github.com/sementaraid/temanten-sdk/tar.gz/bf357598aa3b8f77b326814b871b3d1ff3f151bf':
+    resolution: {tarball: https://codeload.github.com/sementaraid/temanten-sdk/tar.gz/bf357598aa3b8f77b326814b871b3d1ff3f151bf}
+    version: 1.1.1
     peerDependencies:
       react: ^19.0.0
 
@@ -2317,7 +2317,7 @@ snapshots:
       tailwindcss: 4.3.0
       vite: 7.3.3(@types/node@22.19.19)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.22.3)
 
-  '@temanten/sdk@https://codeload.github.com/sementaraid/temanten-sdk/tar.gz/781d9f535bd688e50f970ac17ccee4c5af626947(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@temanten/sdk@https://codeload.github.com/sementaraid/temanten-sdk/tar.gz/bf357598aa3b8f77b326814b871b3d1ff3f151bf(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
       react: 19.2.6
       react-snowfall: 2.4.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)

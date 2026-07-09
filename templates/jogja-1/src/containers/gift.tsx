@@ -1,6 +1,6 @@
 import { motion, useInView } from 'motion/react';
 import { useRef } from 'react';
-import { useUIStore, useInvitationStore } from '@temanten/sdk';
+import { useUIStore, useInvitationStore, useTemantenStore } from '@temanten/sdk';
 import { DebitCard } from './debit-card';
 import { CopyableText } from '../components/invitation/copyable-text';
 import { assetUrl } from '../lib/asset';
@@ -9,9 +9,12 @@ export const Gift = () => {
   const ref = useRef<HTMLDivElement>(null);
   const { screenState } = useUIStore();
   const { data: invitationData } = useInvitationStore();
+  const { guest } = useTemantenStore();
   const isInView = useInView(ref, { once: true });
   const { gift } = invitationData;
   const hasEwallet = Boolean(gift.ewalletProvider && gift.ewalletNumber);
+
+  if (guest.showGiftSection === false) return null;
 
   const isActive = screenState === 'main' && isInView;
 
