@@ -14,7 +14,7 @@ export type ScrollRevealOptions = {
 //   <motion.div ref={ref} variants={…} animate={isVisible ? 'enter' : 'hidden'}>
 export function useScrollReveal<T extends Element = HTMLDivElement>(
   options: ScrollRevealOptions = {},
-): [React.RefObject<T>, boolean] {
+): [React.RefObject<T | null>, boolean] {
   const { once = true, amount = 0.15 } = options;
   const ref = useRef<T>(null);
   const isInView = useInView(ref, { once, amount });
