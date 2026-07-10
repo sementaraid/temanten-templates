@@ -14,7 +14,7 @@ export const Gift = () => {
   const { gift } = invitationData;
   const hasEwallet = Boolean(gift.ewalletProvider && gift.ewalletNumber);
 
-  if (guest.showGiftSection === false) return null;
+  if (!guest.showGiftSection) return null;
 
   const isActive = screenState === 'main' && isInView;
 
