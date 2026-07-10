@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Home, Heart, BookOpen, Scroll, MessageCircle, Gift } from 'lucide-react';
-import { useUIStore } from '@temanten/sdk';
+import { useUIStore, useTemantenStore } from '@temanten/sdk';
 
 const NAV_ITEMS = [
   { id: 'invitation-section', Icon: Home, label: 'Undangan' },
@@ -14,7 +14,12 @@ const NAV_ITEMS = [
 
 export const Navigation = () => {
   const { screenState } = useUIStore();
-  const [activeId, setActiveId] = useState<string>(NAV_ITEMS[0].id);
+  const { guest } = useTemantenStore();
+  const navItems = useMemo(
+    () => NAV_ITEMS.filter((item) => item.id !== 'gift-section' || guest.showGiftSection !== false),
+    [guest.showGiftSection]
+  );
+  const [activeId, setActiveId] = useState<string>(navItems[0].id);
   const [isExpanded, setIsExpanded] = useState(false);
   const collapseRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -34,7 +39,7 @@ export const Navigation = () => {
       if (best) setActiveId(best);
     };
 
-    NAV_ITEMS.forEach(({ id }) => {
+    navItems.forEach(({ id }) => {
       const el = document.getElementById(id);
       if (!el) return;
       const obs = new IntersectionObserver(
@@ -49,7 +54,7 @@ export const Navigation = () => {
     });
 
     return () => observers.forEach((o) => o.disconnect());
-  }, []);
+  }, [navItems]);
 
   const scheduleCollapse = useCallback(() => {
     if (collapseRef.current) clearTimeout(collapseRef.current);
@@ -67,7 +72,7 @@ export const Navigation = () => {
     setIsExpanded(false);
   };
 
-  const activeItem = NAV_ITEMS.find((i) => i.id === activeId) ?? NAV_ITEMS[0];
+  const activeItem = navItems.find((i) => i.id === activeId) ?? navItems[0];
   const { Icon: ActiveIcon } = activeItem;
 
   return (
@@ -108,7 +113,7 @@ export const Navigation = () => {
                     {activeItem.label}
                   </span>
                   <div className="flex items-center gap-[3px] ml-1">
-                    {NAV_ITEMS.map((item) => (
+                    {navItems.map((item) => (
                       <motion.span
                         key={item.id}
                         className="rounded-full bg-[#a85200] dark:bg-[#e8a060] flex-shrink-0"
@@ -132,7 +137,7 @@ export const Navigation = () => {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.15 }}
                 >
-                  {NAV_ITEMS.map(({ id, Icon }) => {
+                  {navItems.map(({ id, Icon }) => {
                     const isActive = id === activeId;
                     return (
                       <motion.button
