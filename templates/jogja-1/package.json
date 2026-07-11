@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",
-    "@temanten/sdk": "https://github.com/sementaraid/temanten-sdk/releases/download/v1.2.3/temanten-sdk-1.2.3.tgz",
+    "@temanten/sdk": "https://github.com/sementaraid/temanten-sdk/releases/download/v1.3.0/temanten-sdk-1.3.0.tgz",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
