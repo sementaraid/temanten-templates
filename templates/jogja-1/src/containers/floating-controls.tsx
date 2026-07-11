@@ -1,10 +1,11 @@
 import { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Volume2, VolumeX, Moon, Sun } from 'lucide-react';
-import { useUIStore } from '@temanten/sdk';
+import { useUIStore, useMusicAllowed } from '@temanten/sdk';
 
 export const FloatingControls = () => {
   const { screenState, playAudio, darkMode, setPlayAudio, setDarkMode } = useUIStore();
+  const musicAllowed = useMusicAllowed();
   const [isExpanded, setIsExpanded] = useState(false);
   const collapseRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -50,11 +51,11 @@ export const FloatingControls = () => {
                   whileTap={{ scale: 0.93 }}
                   aria-label="Buka kontrol"
                 >
-                  {playAudio ? (
+                  {musicAllowed && (playAudio ? (
                     <Volume2 className="w-4 h-4 text-[#a85200] dark:text-[#e8a060]" />
                   ) : (
                     <VolumeX className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                  )}
+                  ))}
                   {darkMode ? (
                     <Sun className="w-4 h-4 text-amber-400" />
                   ) : (
@@ -70,19 +71,21 @@ export const FloatingControls = () => {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.12 }}
                 >
-                  <motion.button
-                    type="button"
-                    onClick={() => handleAction(() => setPlayAudio(!playAudio))}
-                    className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[#a85200]/10 dark:hover:bg-[#a85200]/20 transition-colors"
-                    whileTap={{ scale: 0.88 }}
-                    aria-label={playAudio ? 'Senyapkan musik' : 'Nyalakan musik'}
-                  >
-                    {playAudio ? (
-                      <Volume2 className="w-4 h-4 text-[#a85200] dark:text-[#e8a060]" />
-                    ) : (
-                      <VolumeX className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                    )}
-                  </motion.button>
+                  {musicAllowed && (
+                    <motion.button
+                      type="button"
+                      onClick={() => handleAction(() => setPlayAudio(!playAudio))}
+                      className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[#a85200]/10 dark:hover:bg-[#a85200]/20 transition-colors"
+                      whileTap={{ scale: 0.88 }}
+                      aria-label={playAudio ? 'Senyapkan musik' : 'Nyalakan musik'}
+                    >
+                      {playAudio ? (
+                        <Volume2 className="w-4 h-4 text-[#a85200] dark:text-[#e8a060]" />
+                      ) : (
+                        <VolumeX className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                      )}
+                    </motion.button>
+                  )}
 
                   <motion.button
                     type="button"
