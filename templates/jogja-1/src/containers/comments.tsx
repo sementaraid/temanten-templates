@@ -210,36 +210,38 @@ export function Comments() {
                   </div>
                 </div>
               ) : (
-                comments.map((comment, index) => (
-                  <motion.div
-                    key={comment.id}
-                    variants={itemVariants}
-                    initial="hidden"
-                    animate="enter"
-                    transition={{ delay: index * 0.1 }}
-                    className={cn(
-                      'px-0 py-4',
-                      index !== comments.length - 1 && 'border-b border-dashed border-[#a85200]/30',
-                      index === comments.length - 1 && 'pb-0'
-                    )}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-semibold text-[#a85200] dark:text-[#e8a060] text-base">
-                        {comment.name}
-                      </h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 font-open-sans">
-                        {comment.timestamp.toLocaleDateString('id-ID', {
-                          day: 'numeric',
-                          month: 'long',
-                          year: 'numeric',
-                        })}
+                <div className="max-h-[300px] overflow-y-auto mt-6">
+                  {comments.map((comment, index) => (
+                    <motion.div
+                      key={comment.id}
+                      variants={itemVariants}
+                      initial="hidden"
+                      animate="enter"
+                      transition={{ delay: index * 0.1 }}
+                      className={cn(
+                        'px-0 py-4',
+                        index !== comments.length - 1 && 'border-b border-dashed border-[#a85200]/30',
+                        index === comments.length - 1 && 'pb-0'
+                      )}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-semibold text-[#a85200] dark:text-[#e8a060] text-base">
+                          {comment.name}
+                        </h4>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 font-open-sans">
+                          {comment.timestamp.toLocaleDateString('id-ID', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric',
+                          })}
+                        </p>
+                      </div>
+                      <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed font-open-sans">
+                        {comment.message}
                       </p>
-                    </div>
-                    <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed font-open-sans">
-                      {comment.message}
-                    </p>
-                  </motion.div>
-                ))
+                    </motion.div>
+                  ))}
+                </div>
               )}
             </CardContent>
           </Card>
