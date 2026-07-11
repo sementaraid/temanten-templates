@@ -44,7 +44,7 @@ export function Comments() {
   return (
     <section
       id="comments-section"
-      className="min-h-screen relative overflow-x-hidden flex flex-col justify-center items-center px-4 overflow-hidden"
+      className="min-h-screen relative overflow-x-hidden flex flex-col justify-center items-center px-4 overflow-hidden pt-[80px]"
     >
       <motion.div
         ref={ref}
